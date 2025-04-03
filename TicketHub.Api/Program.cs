@@ -1,9 +1,12 @@
+using TicketHub.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<QueueService>();
 
 var app = builder.Build();
 
@@ -11,8 +14,10 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// Optional: Show a welcome message on root
+app.MapGet("/", () => "Welcome to TicketHub API");
 
+// Enable routing and endpoints
 app.UseAuthorization();
 app.MapControllers();
 

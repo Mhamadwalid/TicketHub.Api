@@ -18,13 +18,27 @@ namespace TicketHub.Api.Services
 
         public async Task SendMessageAsync(PurchaseRequest request)
         {
-            var client = new QueueClient(_connectionString, _queueName);
-            await client.CreateIfNotExistsAsync();
-
-            if (client.Exists())
+            try
             {
-                string message = JsonSerializer.Serialize(request);
-                await client.SendMessageAsync(message);
+                var client = new QueueClient(_connectionString, _queueName);
+                await client.CreateIfNotExistsAsync();
+
+                var exists = await client.ExistsAsync();
+
+                if (await client.ExistsAsync())
+                {
+                    string message = JsonSerializer.Serialize(request);
+                    await client.SendMessageAsync(message);
+                }
+                else
+                {
+                    Console.WriteLine("[ERROR] Queue does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[QUEUE ERROR] {ex.Message}");
+                throw; // Let the controller return 500 if needed
             }
         }
     }

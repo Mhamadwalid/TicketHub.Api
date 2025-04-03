@@ -7,13 +7,15 @@ namespace TicketHub.Api.Models
     {
         public int ConcertId { get; set; }
 
-        [Required, EmailAddress]
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
         public string Name { get; set; }
 
-        [Required, Phone]
+        [Required]
+        [Phone]
         public string Phone { get; set; }
 
         [Range(1, 10)]
